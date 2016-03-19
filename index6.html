@@ -19,41 +19,50 @@
             font-family: Lato, sans-serif;
             color: #0D0000;
         }
+        
         header {
             padding: 6px 10%;
         }
+        
         h1 {
             display: inline-block;
             margin-right: 20px;
             color: #001323;
         }
+        
         h2 {
             display: inline-block;
             color: #001323;
         }
+        
         #map {
             width: 80%;
             height: 600px;
             margin: 10px auto;
         }
+        
         footer {
             padding: 6px 10%;
             width: 80%;
         }
+        
         p {
             font-size: 1em;
             color: #001323;
         }
-        .gold {
-            color: #FFD700;
+        
+        .darkGreen {
+            color: #006400;
         }
+        
         .blue {
             color: #0000FF;
         }
+        
         .darkRed {
             color: #8B0000;
         }
-        
+
     </style>
 </head>
 
@@ -73,65 +82,60 @@
     </footer>
 
     <script>
-
         var map = L.map('map', {
-            center: [51.3,5.5],
+            center: [51.3, 5.5],
             zoom: 5
         });
-       
+
         var tiles = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    });
+            maxZoom: 18,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
         map.addLayer(tiles);
-        
-        var cities = [
-             {
-                 name: "Kirkaldy",
-                 properties: {
-                     coordinates: [56.1138112,-3.2405532],
-                     population: 49460,
-                     state: "UK"
-                 }
-             },
-            {
-                 name: "Bayonne",
-                 properties: {
-                     coordinates: [43.4844564,-1.496084],
-                     population: 44369,
-                     state: "FR"
-                }
-            },
-            {
-                 name: "Vienna",
-                 properties: {
-                     coordinates: [48.220778,16.3100205],
-                     population: 1741000,
-                     state: "AT"
-                 }
+
+        var cities = [{
+            name: "Kirkaldy",
+            properties: {
+                coordinates: [56.1138112, -3.2405532],
+                population: 49460,
+                state: "UK"
             }
-        ];
-        
-        for (var i = 0; i < cities.length; i++){
+        }, {
+            name: "Bayonne",
+            properties: {
+                coordinates: [43.4844564, -1.496084],
+                population: 44369,
+                state: "FR"
+            }
+        }, {
+            name: "Vienna",
+            properties: {
+                coordinates: [48.220778, 16.3100205],
+                population: 1741000,
+                state: "AT"
+            }
+        }];
+
+        for (var i = 0; i < cities.length; i++) {
             //            console.log(cities[i]);
-//            console.log(cities[i].properties);
+            //            console.log(cities[i].properties);
             console.log(cities[i].properties.population);
-            
+
             var props = cities[i].properties;
-//            console.log(props)
-            
+            //            console.log(props)
+
             var pop = props.population;
-            
+
             var popup = buildPopup(name, pop, props.state);
-            
+
             L.marker(props.coordinates).addTo(map)
                 .bindPopup(popup);
         }
-                    
+
         function buildPopup(name, pop, state) {
             if (state == "UK") {
                 var name = "Kirkaldy";
-                var colorClass = "gold";
+                var colorClass = "darkGreen";
             } else if (state == "FR") {
                 var name = "Bayonne";
                 var colorClass = "blue";
@@ -139,13 +143,12 @@
                 var name = "Vienna";
                 var colorClass = "darkRed";
             }
-            return "<div class='"+colorClass+"'><b>"+name+"</b><br>"+
-                "<b>Population</b>: "+pop.toLocaleString()+"<div>";
+            return "<div class='" + colorClass + "'><b>" + name + "</b><br>" +
+                "<b>Population</b>: " + pop.toLocaleString() + "<div>";
         }
 
-    
     </script>
-    
+
 </body>
 
 </html>

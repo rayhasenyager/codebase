@@ -19,32 +19,37 @@
             font-family: sans-serif;
             color: #0D0000;
         }
+        
         header {
             padding: 6px 10%;
         }
+        
         h1 {
             display: inline-block;
             margin-right: 20px;
             color: darkgrey;
         }
+        
         h2 {
             display: inline-block;
             color: darkgrey;
         }
+        
         #map {
             width: 80%;
             height: 540px;
             margin: 10px auto;
         }
+        
         footer {
             padding: 6px 10%;
             width: 80%;
         }
+        
         p {
             font-size: 1em;
             color: darkgrey;
         }
-        
 
     </style>
 </head>
@@ -59,46 +64,45 @@
 
     <footer>
         <p>Map authored by Ray Hasenyager</p>
-        <p>The map allows users to view distances from the Red Iguana Restaurant in Salt Lake City (40.7718, -111.9124). When the user clicks on the map they will  see the distance from the selected point and the distance from the southwest map boundary of the re-centered map to the restaurant through the console log. The map also centers and zooms to level 6 at the selected location. The user can click on additional locations.
+        <p>The map allows users to view distances (using the cosole in Developer Tools) from the Red Iguana Restaurant in Salt Lake City (40.7718, -111.9124). When the user clicks on the map they will see the distance from the selected point and the distance from the southwest map boundary of the re-centered map to the restaurant through the console log. The map also centers and zooms to level 6 at the selected location. The user can click on additional locations.
         </p>
     </footer>
 
     <script>
+        var map = L.map('map', {
+            center: [40, -94],
+            zoom: 4,
+            minZoom: 4,
+            maxZoom: 12
+        });
 
-    var map = L.map('map', {
-        center: [40,-94],
-        zoom: 4,
-        minZoom: 4,
-        maxZoom: 12
-    });
-        
-    var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-        subdomains: 'abcd',
-        minZoom: 4
-    });
-    map.addLayer(tiles);
-    
-    var redIguana = L.latLng(40.7718,-111.9124);
-    
-    map.on('click', function(e){
-        var newLoc = e.latlng;
-        
-        map.setView(newLoc, 6);
-        
-        var distance = redIguana.distanceTo(newLoc);
-        console.log(distance);
-        
-        var bounds = map.getBounds();
-        
-        var southWest = bounds.getSouthWest();
-        
-        var distanceSw = redIguana.distanceTo(southWest);
-        console.log(distanceSw);
-    });
-      
+        var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+            subdomains: 'abcd',
+            minZoom: 4
+        });
+        map.addLayer(tiles);
+
+        var redIguana = L.latLng(40.7718, -111.9124);
+
+        map.on('click', function(e) {
+            var newLoc = e.latlng;
+
+            map.setView(newLoc, 6);
+
+            var distance = redIguana.distanceTo(newLoc);
+            console.log(distance.toLocaleString());
+
+            var bounds = map.getBounds();
+
+            var southWest = bounds.getSouthWest();
+
+            var distanceSw = redIguana.distanceTo(southWest);
+            console.log(distanceSw.toLocaleString());
+        });
+
     </script>
-    
+
 </body>
 
 </html>

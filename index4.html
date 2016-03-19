@@ -19,32 +19,37 @@
             font-family: Lato, sans-serif;
             color: #0D0000;
         }
+        
         header {
             padding: 6px 10%;
         }
+        
         h1 {
             display: inline-block;
             margin-right: 20px;
             color: #001323;
         }
+        
         h2 {
             display: inline-block;
             color: #001323;
         }
+        
         #map {
             width: 80%;
             height: 540px;
             margin: 10px auto;
         }
+        
         footer {
             padding: 6px 10%;
             width: 80%;
         }
+        
         p {
             font-size: 1em;
             color: #001323;
         }
-
 
     </style>
 </head>
@@ -68,37 +73,35 @@
         var targetDiv = 'map';
 
         var options = {
-            center: [45.0,19.8],
+            center: [45.0, 19.8],
             zoom: 6 <!-- sized using using a 22 inch monitor -->
         }
         map = L.map(targetDiv, options);
         var tiles = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-	    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
         });
         map.addLayer(tiles);
-        
+
 
         var cities = ["Lermoos, Austria", "Venice, Italy", "Istanbul, Turkey"];
-            cityCoords = [
-                [47.4, 10.8833],
-                [45.4375, 12.3358],
-                [41.0136, 28.9550]
-            ];
-            cityPops = [1098, 260060, 14030000];
-            cityCapital = [false, false, false];
-        
-        
-        for(var i = 0; i < cities.length; i++) {
-            var popup = "<b>"+cities[i]+"</b><br>"
-                +"<b>Population</b>: "+cityPops[i];
-                if(cityCapital[i] == true){
-                    popup += "<br>Is the capital city."; // None are capital cities, but I tested with one as a capital and it worked.
-                }
-        L.marker(cityCoords[i]).addTo(map)
-            .bindPopup(popup);
+        cityCoords = [
+            [47.4, 10.8833],
+            [45.4375, 12.3358],
+            [41.0136, 28.9550]
+        ];
+        cityPops = [1098, 260060, 14030000];
+        cityCapital = [false, false, false];
+
+
+        for (var i = 0; i < cities.length; i++) {
+            var popup = "<b>" + cities[i] + "</b><br>" + "<b>Population</b>: " + cityPops[i].toLocaleString();
+            if (cityCapital[i] == true) {
+                popup += "<br>Is the capital city."; // None are capital cities, but I tested with one as a capital and it worked.
+            }
+            L.marker(cityCoords[i]).addTo(map)
+                .bindPopup(popup);
         }
-      
-          
+
     </script>
-    
+
 </body>

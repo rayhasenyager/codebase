@@ -64,7 +64,7 @@
 
     <footer>
         <p>Map authored by Ray Hasenyager</p>
-        <p>Circles indicate power plants in the United States. Clicking on a circle will reveal the fuel type and magnitude megawatts produced.</p>
+        <p>Circles indicate power plants in the United States. Clicking on a circle will reveal the fuel type and magnitude of megawatts produced.</p>
     </footer>
 
     <script src="power-plants.js"></script>
@@ -104,7 +104,7 @@
                 }
             },
             onEachFeature: function(feature, layer) {
-                layer.bindPopup("<b>" + feature.properties.plant_name + "</b><br>" + feature.properties.capacity_mw + " MW");
+                layer.bindPopup("<b>" + feature.properties.plant_name + "</b><br>" + feature.properties.capacity_mw.toLocaleString() + " MW");
                 layer.on('mouseover', function() {
                     layer.setStyle({
                         fillColor: 'cyan'
