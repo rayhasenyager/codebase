@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Lab 06 Economists Birthplaces</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 80%;
+            height: 600px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+        .gold {
+            color: #FFD700;
+        }
+        .blue {
+            color: #0000FF;
+        }
+        .darkRed {
+            color: #8B0000;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>My Favorite Economists</h1>
+        <h2>Birth cities and population of three liberty minded economists</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p>Map authored by Ray Hasenyager</p>
+        <p>Population and location data gathered from searches using Google.</p>
+        <p>I chose to map the birthplaces of three economists that greatly influence classical liberal thought today. <a href="http://www.econlib.org/library/Enc/bios/Smith.html"> Adam Smith</a> is known, among other things, for the two publications <a href="https://books.google.com/books?id=d-UUAAAAQAAJ&printsec=frontcover&dq=theory+of+moral+sentiments&hl=en&sa=X&sqi=2&ved=0ahUKEwjz7MnKj4_LAhUI3mMKHaV1CJEQ6AEIJTAA#v=onepage&q=theory%20of%20moral%20sentiments&f=false"> The Theory of Moral Sentiments</a> and <a href="https://books.google.com/books?id=5hBOAAAAYAAJ&printsec=frontcover&dq=the+wealth+of+nations&hl=en&sa=X&ved=0ahUKEwi0wo3wj4_LAhVGyGMKHcY5AXUQ6AEIJjAA#v=onepage&q=the%20wealth%20of%20nations&f=false"> The Wealth of Nations</a>. He was part of the Scottish Enlightenment. <a href="http://www.econlib.org/library/Enc/bios/Bastiat.html"> Frédéric Bastiat</a> is known for his essay <a href="https://books.google.com/books?id=DBsOngEACAAJ&dq=What+Is+Seen+and+What+Is+Not+Seen&hl=en&sa=X&ved=0ahUKEwiS_eLSkI_LAhVX0GMKHfFzB60Q6AEIHTAA"> That Which Is Seen and That Which Is Not Seen</a> it is also known as the Broken Window Fallacy. <a href="http://www.econlib.org/library/Enc/bios/Hayek.html"> F.A. Hayek</a> is known for many things: Austrian Economics, his opposition to the throries of <a href="http://www.econlib.org/library/Enc/bios/Keynes.html"> John Maynard Keynes'</a> planned economy, and the business cycle theory. He is best known to me for his book <a href="http://smile.amazon.com/Road-Serfdom-Fiftieth-Anniversary/dp/0226320618/ref=la_B000AQ6W60_1_4?s=books&ie=UTF8&qid=1456272825&sr=1-4"> The Road to Serfdom</a>.
+        </p>
+    </footer>
+
+    <script>
+
+        var map = L.map('map', {
+            center: [51.3,5.5],
+            zoom: 5
+        });
+       
+        var tiles = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    });
+        map.addLayer(tiles);
+        
+        var cities = [
+             {
+                 name: "Kirkaldy",
+                 properties: {
+                     coordinates: [56.1138112,-3.2405532],
+                     population: 49460,
+                     state: "UK"
+                 }
+             },
+            {
+                 name: "Bayonne",
+                 properties: {
+                     coordinates: [43.4844564,-1.496084],
+                     population: 44369,
+                     state: "FR"
+                }
+            },
+            {
+                 name: "Vienna",
+                 properties: {
+                     coordinates: [48.220778,16.3100205],
+                     population: 1741000,
+                     state: "AT"
+                 }
+            }
+        ];
+        
+        for (var i = 0; i < cities.length; i++){
+            //            console.log(cities[i]);
+//            console.log(cities[i].properties);
+            console.log(cities[i].properties.population);
+            
+            var props = cities[i].properties;
+//            console.log(props)
+            
+            var pop = props.population;
+            
+            var popup = buildPopup(name, pop, props.state);
+            
+            L.marker(props.coordinates).addTo(map)
+                .bindPopup(popup);
+        }
+                    
+        function buildPopup(name, pop, state) {
+            if (state == "UK") {
+                var name = "Kirkaldy";
+                var colorClass = "gold";
+            } else if (state == "FR") {
+                var name = "Bayonne";
+                var colorClass = "blue";
+            } else if (state == "AT") {
+                var name = "Vienna";
+                var colorClass = "darkRed";
+            }
+            return "<div class='"+colorClass+"'><b>"+name+"</b><br>"+
+                "<b>Population</b>: "+pop.toLocaleString()+"<div>";
+        }
+
+    
+    </script>
+    
+</body>
+
+</html>

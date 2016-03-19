@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Lab 05: JavaScript Functions</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+        /* Additional style rules go here! */
+        
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>City Population Density</h1>
+        <h2>User input used in calculating population density in miles and kilometers</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p>Map authored by Ray Hasenyager</p>
+        <p>Coordinate, population, and land size data gathered from searches using Google.com.</p>
+        <p>I attempted the 'do-while' and 'while' loops, but they did not break when the user entered a correct value after entering an incorrect value.</p>
+    </footer>
+
+<script>
+    
+    var options = {
+        center: [38.6489,-84.5025],
+        zoom: 8
+    }
+    
+    var map = L.map('map', options);
+    
+    var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+    });
+    map.addLayer(tiles);
+
+    var lexArea = Number(prompt("Enter data", "Enter the area of Lexington in square miles"));
+    var louArea = Number(prompt("Enter data", "Enter the area of Louisville in square miles"));
+    var cinArea = Number(prompt("Enter data", "Enter the area of Cincinnati in square miles"));
+        
+    prepareData(lexArea, louArea, cinArea);
+    
+    function prepareData(lexArea, louArea, cinArea) {
+        var cities = ["Lexington", "Louisville", "Cincinnati"]; // sq miles used are 285.5, 399, 79.54
+        var cityCoords = [
+            [38.0297, -84.4947],
+            [38.25, -85.7667],
+            [39.1, -84.5167]
+            ];
+        var cityPops = [308428, 253128, 297517];
+        var cityAreas = [lexArea, louArea, cinArea];
+        
+        mapCities(cities, cityCoords, cityPops, cityAreas);
+    }
+    
+    function mapCities(cities, cityCoords, cityPops, cityAreas) {
+
+        do{
+            var units = prompt('Units for calculating density', 'Enter "miles" or "km"');
+            }
+        while (units != "miles" && units != "km")
+        
+        for(var i = 0; i < cities.length; i++) {
+            
+            var density = calcPopDensity(cityPops[i], cityAreas[i], units)
+            var popup = "<b>"+cities[i]+"</b><br>"
+                        +"<b>Density</b>: "+density.toLocaleString()+" people per sq " + units;
+            
+            L.marker(cityCoords[i]).addTo(map)
+                .bindPopup(popup);
+        }
+    }
+    
+    function calcPopDensity(cityPops, cityAreas, units){
+        
+        if(units === "km") { //chose km since it is less likely to be typed incorrectly
+            var density = cityPops / cityAreas * 2.58999;
+        } else {var density = cityPops / cityAreas;
+        }
+        return density
+    }
+
+</script>
+    
+</body>
+
+</html>

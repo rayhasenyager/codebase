@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Three Important Kentucky Cities</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Three Important Kentucky Cities</h1>
+        <h2>Locations and populations</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p>Map authored by Ray Hasenyager</p>
+        <p>The map displays three important Kentucky cities; Lexington, Frankfort, and Louisville. The cities are imprortant since they are either major population centers or  the capital. The combined population of these cities is 589,009 and the average city population is 196,336.</p>
+    </footer>
+
+    <script>
+        var map;
+        var targetDiv = 'map';
+
+        var options = {
+            center: [38.0489,-84.5025],
+            zoom: 8
+        }
+        map = L.map(targetDiv, options);
+        
+        var tiles = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            subdomains: 'abcd',
+            minZoom: 1,
+            maxZoom: 16,
+            ext: 'png'
+        });
+        map.addLayer(tiles);
+        
+        
+        // CITY1 INFORMATION CODE
+        var city1Name = "Lexington",
+            city1Lat = 38.0297,
+            city1Lon = -84.4947,
+            city1Pop = 308428,
+            city1Capital = false;
+        
+        // CITY2 INFORMATION CODE
+        var city2Name = "Frankfort";
+        var city2Lat = 38.1970;
+        var city2Lon = -84.8630;
+        var city2Pop = 27453;
+        var city2Capital = true;
+        
+        // CITY3 INFORMATION CODE
+        var city3Name = "Louisville";
+        var city3Lat = 38.2500;
+        var city3Lon = -85.7667;
+        var city3Pop = 253128;
+        var city3Capital = false;
+        
+        // OPULATION CALCULATION CODE
+        var totalPop = city1Pop + city2Pop + city3Pop;
+        var averagePop = totalPop/3;
+        
+        console.log(totalPop);
+        console.log("The average population of these cities is: ", averagePop);
+        
+        var cities = ["Lexington", "Frankfort", "Louisville"];
+        console.log(cities[2]);
+                
+        
+        // CITY1 MARKER CODE HERE
+        var city1Popup = "<b>"+city1Name+"</b><br>"
+                        +"<b>Population</b>: "+city1Pop.toLocaleString();
+        
+        if(city1Capital == true) {
+            city1Popup += "<br>Capital of the Commonwealth of Kentucky";   
+        }
+        
+        L.marker([city1Lat,city1Lon]).addTo(map)
+            .bindPopup(city1Popup);
+        
+//         CITY2 MARKER CODE HERE
+        var city2Popup = "<b>"+city2Name+"</b><br>"
+                        +"<b>Population</b>: "+city2Pop.toLocaleString();
+        
+        if(city2Capital == true) {
+            city2Popup += "<br>Capital of the Commonwealth of Kentucky";   
+        }
+        
+        L.marker([city2Lat,city2Lon]).addTo(map)
+            .bindPopup(city2Popup);
+        
+//         CITY3 MARKER CODE HERE
+        var city3Popup = "<b>"+city3Name+"</b><br>"
+                        +"<b>Population</b>: "+city3Pop.toLocaleString();
+        
+        if(city3Capital == true) {
+            city3Popup += "<br>Capital of the Commonwealth of Kentucky";   
+        }
+        
+        L.marker([city3Lat,city3Lon]).addTo(map)
+            .bindPopup(city3Popup);
+          
+    </script>
+    
+</body>
+
+</html>

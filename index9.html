@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Lab 09 Template</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        
+        header {
+            padding: 6px 10%;
+        }
+        
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+        
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>US Fossil Fuel Plants</h1>
+        <h2>Fossil fuel plants across the 50 states.</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p>Map authored by Ray Hasenyager</p>
+        <p>This map shows fossil fuel plants across the United States. By clicking on the map the user will see all indicated plants within a 500 km radius to the click point and the plant pop ups will be dsplayed when a user clicks on the plant circle. Circles indicate kilowatt output by the circle's size.</p>
+    </footer>
+
+    <script src="power-plants.js"></script>
+    <script>
+        var map = L.map('map', {
+            center: [36, -94],
+            zoom: 4,
+        });
+
+        var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        });
+
+        tiles.addTo(map);
+
+        var layerInfo = {
+            petroLayer: {
+                source: "Petroleum",
+                color: '#00FF7F'
+            },
+            gasLayer: {
+                source: "Natural Gas",
+                color: '#a6cee3'
+            },
+            coalLayer: {
+                source: "Coal",
+                color: '#FF6347'
+            }
+        };
+
+        var geoJsonLayers = {};
+
+        for (var layer in layerInfo) {
+            geoJsonLayers[layer] = L.geoJson(plants, {
+                pointToLayer: function(feature, latlng) {
+                    return L.circleMarker(latlng, commonStyles);
+                },
+                filter: function(feature) {
+                    if (feature.properties.fuel_source[layerInfo[layer].source]) {
+                        return feature;
+                    }
+                },
+                style: function(feature) {
+                    return {
+                        color: layerInfo[layer].color,
+                        fillColor: layerInfo[layer].color,
+                        radius: getRadius(feature.properties.fuel_source[layerInfo[layer].source])
+                    }
+                },
+            }).addTo(map);
+        }
+
+        var clickCirLayer = L.layerGroup().addTo(map);
+
+        map.on('click', function(e) {
+            for (var layer in geoJsonLayers) {
+                geoJsonLayers[layer].eachLayer(function(layer) {
+
+                    clickCirLayer.eachLayer(function(layer) {
+                        clickCirLayer.removeLayer(layer);
+                    });
+
+                    var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+
+                    var clickCircle = L.circle(e.latlng, 500000).addTo(clickCirLayer).bringToBack();
+
+                    if (distance > 500) {
+                        layer.setStyle({
+                            stroke: false,
+                            fill: false
+                        });
+                    } else {
+                        layer.setStyle({
+                            stroke: true,
+                            fill: true
+                        });
+                    }
+                    clickCircle.setStyle({
+                        color: '#C0C0C0',
+                        stroke: false,
+                        fillColor: '#C0C0C0',
+                        fillOpacity: .2
+                    });
+
+                    var content = '<b>Plant Name: </b>' + layer.feature.properties.plant_name + '<br><b>Distance from mouse click: </b>' + distance.toLocaleString() + ' km<br>';
+
+                    for (var source in layer.feature.properties.fuel_source) {
+                        content += '<b>Fuel Source: </b>' + source;
+                    }
+                    layer.bindPopup(content);
+                })
+            };
+        });
+
+        function getRadius(val) {
+            var radius = Math.sqrt(val / Math.PI);
+            return radius * .8;
+        }
+
+        var sourcesLabels = {
+            "<b style='color:#00FF7F'>Petroleum</b>": geoJsonLayers.petroLayer,
+            "<b style='color:#a6cee3'>Natural Gas</b>": geoJsonLayers.gasLayer,
+            "<b style='color:#FF6347'>Coal</b>": geoJsonLayers.coalLayer
+        }
+
+        L.control.layers(null, sourcesLabels, {
+            collapsed: false
+        }).addTo(map);
+
+        var commonStyles = {
+            weight: 1,
+            stroke: 1,
+            fillOpacity: .8
+        }
+
+    </script>
+
+</body>
+
+</html>
