@@ -119,19 +119,22 @@
             }).addTo(map);
         }
 
-        var clickCirLayer = L.layerGroup().addTo(map);
+        var clickCircle = L.circle([0, 0], 500000).addTo(map).bringToBack();
+
+        clickCircle.setStyle({
+            color: '#C0C0C0',
+            stroke: false,
+            fillColor: '#C0C0C0',
+            fillOpacity: .2
+        });
 
         map.on('click', function(e) {
             for (var layer in geoJsonLayers) {
                 geoJsonLayers[layer].eachLayer(function(layer) {
 
-                    clickCirLayer.eachLayer(function(layer) {
-                        clickCirLayer.removeLayer(layer);
-                    });
-
                     var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
 
-                    var clickCircle = L.circle(e.latlng, 500000).addTo(clickCirLayer).bringToBack();
+                    clickCircle.setLatLng(e.latlng);
 
                     if (distance > 500) {
                         layer.setStyle({
@@ -144,17 +147,11 @@
                             fill: true
                         });
                     }
-                    clickCircle.setStyle({
-                        color: '#C0C0C0',
-                        stroke: false,
-                        fillColor: '#C0C0C0',
-                        fillOpacity: .2
-                    });
 
                     var content = '<b>Plant Name: </b>' + layer.feature.properties.plant_name + '<br><b>Distance from mouse click: </b>' + distance.toLocaleString() + ' km<br>';
 
                     for (var source in layer.feature.properties.fuel_source) {
-                        content += '<b>Fuel Source: </b>' + source;
+                        content += '<b>Fuel Source: </b>' + source + '<br>';
                     }
                     layer.bindPopup(content);
                 })
